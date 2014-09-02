@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">FindIt</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_items">Items</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="results">Resultados</string>
+    <string name="allresults">Ver todos los resultados</string>
+    <string name="title_activity_item">ItemActivity</string>
+    <string name="title_activity_sucursal">Sucursal</string>
+    <string name="facebookstring">Facebook.com/ingesu</string>
+    <string name="twitterstring">\@ingesumadre</string>
+    <string name="defaultnumbers">3312123131231,1231231231,123123123</string>
+
+</resources>

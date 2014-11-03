@@ -354,7 +354,9 @@ public class Items extends Activity implements IItems, OnMarkerClickListener{
 				//bundle.putSerializable("item", this.getCopySerializable(selectedItem));
 				Intent intent = new Intent(Items.this,Sucursal.class);
 				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				bundle.putString("idSucursal", item.getIdSucursal()+"");
 				intent.putExtras(bundle);
+				
 				startActivity(intent);
 				// TODO Auto-generated method stub
 				

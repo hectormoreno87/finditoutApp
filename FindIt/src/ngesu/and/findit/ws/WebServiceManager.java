@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ngesu.and.findit.Items;
+import ngesu.and.findit.Sucursal;
+import ngesu.and.findit.intefaces.CallbackSucursal;
 import ngesu.and.findit.intefaces.IItems;
 import ngesu.and.findit.models.Item;
+import ngesu.and.findit.models.SucursalModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,15 +38,35 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 	private static final String NAMESPACE = "http://tempuri.org/";
 	//private static final String URL = "http://192.168.1.27/injertos2/AndroidSync.asmx";
 	private SoapSerializationEnvelope envelope;
-	private static final String URL = "http://192.168.1.110/finditout/wsFindItOut.asmx";
+	private static final String URL = "http://192.168.6.110/finditout/wsFindItOut.asmx";
 	IItems itemsInterface;
+	CallbackSucursal sucursal;
 	List<Item> items;
+	SucursalModel _sucursalModel;
+	String type;
 	public WebServiceManager(IItems itemsInterface)
 	{
 		try
 		{		
-			items= new ArrayList<>();
+			type="GetInfo";
+			items= new ArrayList<Item>();
 			this.itemsInterface=itemsInterface;
+			envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	public WebServiceManager(CallbackSucursal sucursalInterface)
+	{
+		try
+		{	
+			type="GetSucursalByID";
+			items= new ArrayList<Item>();
+			this.sucursal=sucursalInterface;
 			envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.dotNet = true;
 		}
@@ -78,6 +101,28 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 	}
 	
 	
+	private String callWebServiceGetSucursal(String method, String idSucursal) throws IOException, XmlPullParserException
+	{
+		String res="";
+	
+		try
+		{
+			String SOAP_ACTION = NAMESPACE+method;
+			SoapObject request = new SoapObject(NAMESPACE, method);
+			request.addProperty("idSucursal", idSucursal);
+			
+			envelope.setOutputSoapObject(request);
+			HttpTransportSE transporte = new HttpTransportSE(URL);
+			transporte.call(SOAP_ACTION, envelope);
+			SoapPrimitive resultado_xml =(SoapPrimitive)envelope.getResponse();
+			res = resultado_xml.toString();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return res;
+	}
+	
+	
 
 
 	@Override
@@ -85,6 +130,7 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 		// TODO Auto-generated method stub
 		String sResult="";
 		try {
+			
 			
 			if(params[0]=="GetInfo")
 			{
@@ -97,6 +143,19 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 					JSONObject obj = array.getJSONObject(i);
 					Item item=gson.fromJson(obj.toString(), Item.class);
 					items.add(item);
+				}
+				
+			}
+			else if(params[0]=="GetSucursalByID")
+			{
+				sResult=callWebServiceGetSucursal(params[0],params[1]);
+			    JSONArray array = new JSONArray(sResult);
+			    Gson gson = new Gson();
+			    
+			    for (int i = 0; i < array.length(); i++) {
+					JSONObject obj = array.getJSONObject(i);
+					_sucursalModel=gson.fromJson(obj.toString(), SucursalModel.class);
+					
 				}
 				
 			}
@@ -118,7 +177,20 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onPreExecute() {
-    	pd = new ProgressDialog((Items)(WebServiceManager.this.itemsInterface));
+    	
+    	if(type.compareTo("GetInfo")==0)
+		{
+			
+    		pd = new ProgressDialog((Items)(WebServiceManager.this.itemsInterface));
+			
+		}
+		else if(type.compareTo("GetSucursalByID")==0)
+		{
+			
+			pd = new ProgressDialog((Sucursal)(WebServiceManager.this.sucursal));
+		}
+    	
+    	
         pd.setTitle("Sincronizando...");
         pd.setMessage("Por Favor Espere.");
         pd.setCancelable(false);
@@ -139,7 +211,19 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 		int duration = Toast.LENGTH_SHORT;
 		//Toast toast = Toast.makeText((Items)(WebServiceManager.this.itemsInterface), result, duration);
 		//toast.show();
-		itemsInterface.callback(items);
+		if(type.compareTo("GetInfo")==0)
+		{
+			
+			itemsInterface.callback(items);
+			
+		}
+		else if(type.compareTo("GetSucursalByID")==0)
+		{
+			
+			sucursal.callback(_sucursalModel);
+		}
+		
+		
 		
     }
 }

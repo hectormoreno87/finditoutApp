@@ -13,5 +13,7 @@
     <dimen name="s10pt">10pt</dimen>
     <dimen name="s8pt">8pt</dimen>
     <dimen name="s6pt">6pt</dimen>
+    <dimen name="d5dp">5dp</dimen>
+    <dimen name="s7pt">7pt</dimen>
 
 </resources>

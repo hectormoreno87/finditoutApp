@@ -88,14 +88,14 @@
                 android:weightSum="1" >
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/profileimage"
                     android:layout_width="0dp"
                     android:layout_height="25dp"
                     android:layout_weight=".1"
                     android:background="@drawable/facebook" />
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/wellface"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".9"

@@ -11,20 +11,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 import ngesu.and.findit.R;
+import ngesu.and.findit.intefaces.CallbackSucursal;
+import ngesu.and.findit.intefaces.IItems;
+import ngesu.and.findit.models.SucursalModel;
+import ngesu.and.findit.ws.WebServiceManager;
 
 
-public class Sucursal extends Activity {
+public class Sucursal extends Activity implements CallbackSucursal {
 
+	SucursalModel _sucursalModel;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sucursal);
-
+		
 		View title = getWindow().findViewById(android.R.id.title);
         View titleBar = (View) title.getParent();
         titleBar.setBackgroundColor(getResources().getColor(R.color.red));
-        
-        
+        WebServiceManager ws= new WebServiceManager(this);
+        String idSucursal= this.getIntent().getExtras().getString("idSucursal");
+        try {
+        	
+			ws.execute("GetSucursalByID",idSucursal);
+			
+			
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
 		if (savedInstanceState == null) {
 			
@@ -49,6 +64,14 @@ public class Sucursal extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void callback(SucursalModel s) {
+		
+		_sucursalModel=s;
+		// TODO Auto-generated method stub
+		
 	}
 
 	

@@ -1,11 +1,15 @@
 package ngesu.and.findit;
 
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.viewpagerindicator.CirclePageIndicator;
 
 import ngesu.and.findit.intefaces.IItems;
 import ngesu.and.findit.models.Item;
 import ngesu.and.findit.models.ItemSerializable;
+import ngesu.and.findit.utils.AdapterVerGaleria;
 import ngesu.and.findit.ws.GetImages;
 import android.app.Activity;
 import android.app.ActionBar;
@@ -15,6 +19,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.os.Build;
 
-public class ItemActivity extends Activity implements IItems {
+public class ItemActivity extends FragmentActivity implements IItems {
 
 	ItemSerializable item;
 	@Override
@@ -59,6 +66,7 @@ public class ItemActivity extends Activity implements IItems {
 			p.setText(item.getName());
 		}
 	}
+	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,31 +106,46 @@ public class ItemActivity extends Activity implements IItems {
 	public void callbackImages(List<Bitmap> images) {
 		// TODO Auto-generated method stub
 		
-		LinearLayout ln= (LinearLayout)findViewById(R.id.idContent);
-		final ImageView i= (ImageView)findViewById(R.id.currentImage);
-		i.setBackgroundDrawable(null);
-		ln.removeAllViews();
+		//LinearLayout ln= (LinearLayout)findViewById(R.id.idContent);
+		
+		
+		List<Bitmap> items= new ArrayList<Bitmap>();
+		//final ImageView i= (ImageView)findViewById(R.id.currentImage);
+		//i.setBackgroundDrawable(null);
+		//ln.removeAllViews();
 		boolean first=true;
 		for(Bitmap bm : images)
 		{
 			
-			final ImageView iv= new ImageView(this);
-			iv.setOnClickListener(new OnClickListener() {
+			Fragment_Image f= new Fragment_Image();
+			
+		
+			//ImageView iv= f.getImg();
+			/*iv.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					i.setBackgroundDrawable(iv.getBackground());
 				}
-			});
-			iv.setBackgroundDrawable(new BitmapDrawable(getResources(), bm));
-			if(first)
+			});*/
+			//iv.setBackgroundDrawable(new BitmapDrawable(getResources(), bm));
+			/*if(first)
 			{
 				first=false;
 				i.setBackgroundDrawable(new BitmapDrawable(getResources(), bm));
-			}
-			ln.addView(iv);
+			}*/
+			items.add(bm);
+			//ln.addView(iv);
 		}
+		AdapterVerGaleria adapter= new AdapterVerGaleria(getSupportFragmentManager(), items);
+		
+		ViewPager pager =(ViewPager)findViewById(R.id.gallery_item);
+		pager.setAdapter(adapter);
+		CirclePageIndicator  mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
+	        mIndicator.setViewPager(pager);
+	        ((CirclePageIndicator) mIndicator).setSnap(true);
+	
 		
 	}
 

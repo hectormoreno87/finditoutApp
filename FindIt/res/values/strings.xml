@@ -13,5 +13,11 @@
     <string name="facebookstring">Facebook.com/ingesu</string>
     <string name="twitterstring">\@ingesumadre</string>
     <string name="defaultnumbers">3312123131231,1231231231,123123123</string>
+    <string name="app_id">772335249490789</string>
+    <string name="title_activity_login_face">LoginFaceActivity</string>
+    <string name="title_activity_main_face">MainFaceActivity</string>
+    <string name="get_started">To get started, log in using Facebook</string>
+    <string name="settings">Settings</string>
+
 
 </resources>

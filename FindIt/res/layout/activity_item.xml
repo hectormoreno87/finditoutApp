@@ -7,39 +7,35 @@
     android:orientation="vertical"
     android:weightSum="1"
     tools:context="ngesu.and.findit.ItemActivity"
-    tools:ignore="MergeRootFrame" xmlns:android="http://schemas.android.com/apk/res/android">
+    tools:ignore="MergeRootFrame" xmlns:android="http://schemas.android.com/apk/res/android" 
+    
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollView1"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/gallery_item"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+       
+        android:layout_weight=".45" >
+
+</android.support.v4.view.ViewPager>
+ 
+ <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_weight=".15" >
-
-        <LinearLayout
-            android:id="@+id/idContent"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="horizontal" >
-
-        </LinearLayout>
-    </HorizontalScrollView>
+        android:padding="5dip"
+        app:strokeWidth="4dip"
+        app:fillColor="@color/red"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:layout_weight=".05" />
+ 
     
-     <ImageView
-         android:id="@+id/currentImage"
-         android:layout_width="match_parent"
-         android:layout_height="0dp"
-         android:layout_gravity="center_horizontal"
-         android:layout_margin="5dp"
-         android:layout_weight=".5" />
-
-    >
-
          <LinearLayout
              android:layout_width="match_parent"
              android:layout_height="0dp"
-             android:layout_weight=".35"
+             android:layout_weight=".5"
              android:orientation="vertical"
              android:weightSum="1" >
 

@@ -20,9 +20,17 @@ public class ItemSerializable implements Serializable {
 	String longitude;
 	String logo;
 	String allImages;
+	
 	String description;
+	Integer idSucursal;
 	
 	
+	public Integer getIdSucursal() {
+		return idSucursal;
+	}
+	public void setIdSucursal(Integer idSucursal) {
+		this.idSucursal = idSucursal;
+	}
 	public String getDescription() {
 		return description;
 	}

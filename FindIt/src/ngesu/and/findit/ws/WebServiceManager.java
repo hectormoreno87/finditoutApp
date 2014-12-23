@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import ngesu.and.findit.InfoActivity;
 import ngesu.and.findit.Items;
 import ngesu.and.findit.Sucursal;
 import ngesu.and.findit.intefaces.CallbackSucursal;
@@ -65,6 +66,22 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 		try
 		{	
 			type="GetSucursalByID";
+			items= new ArrayList<Item>();
+			this.sucursal=sucursalInterface;
+			envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	public WebServiceManager(CallbackSucursal sucursalInterface, Boolean fromInfo)
+	{
+		try
+		{	
+			type="GetSucursalByIDForInfo";
 			items= new ArrayList<Item>();
 			this.sucursal=sucursalInterface;
 			envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -189,6 +206,11 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 			
 			pd = new ProgressDialog((Sucursal)(WebServiceManager.this.sucursal));
 		}
+		else if(type.compareTo("GetSucursalByIDForInfo")==0)
+		{
+			
+			pd = new ProgressDialog((InfoActivity)(WebServiceManager.this.sucursal));
+		}
     	
     	
         pd.setTitle("Sincronizando...");
@@ -218,6 +240,11 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 			
 		}
 		else if(type.compareTo("GetSucursalByID")==0)
+		{
+			
+			sucursal.callback(_sucursalModel);
+		}
+		else if(type.compareTo("GetSucursalByIDForInfo")==0)
 		{
 			
 			sucursal.callback(_sucursalModel);

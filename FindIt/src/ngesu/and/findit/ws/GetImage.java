@@ -27,6 +27,12 @@ public class GetImage extends AsyncTask<String, Void, Void> {
         this.itemLayout=ly;
 	}
 	
+	public  GetImage(IItems iitems, LinearLayout ly) {
+		
+		this.iitems=iitems;
+        this.itemLayout=ly;
+	}
+	
 	@Override
 	protected Void doInBackground(String... params) {
 		// TODO Auto-generated method stub

@@ -22,6 +22,7 @@ import ngesu.and.findit.models.Item;
 import ngesu.and.findit.models.ItemSerializable;
 import ngesu.and.findit.utils.ResizeAnimation;
 import ngesu.and.findit.utils.Screen;
+import ngesu.and.findit.utils.Variables;
 import ngesu.and.findit.ws.GetImage;
 import ngesu.and.findit.ws.WebServiceManager;
 import android.app.Activity;
@@ -68,8 +69,6 @@ public class Items extends Activity implements IItems, OnMarkerClickListener{
 		super.onCreate(savedInstanceState);
 		currentMapID=0;
 		setContentView(R.layout.activity_items);
-		
-		
 		
 		hash= new Hashtable<Integer,View>();
 			items=(LinearLayout)this.findViewById(R.id.idLayoutList);
@@ -195,6 +194,8 @@ public class Items extends Activity implements IItems, OnMarkerClickListener{
 				//bundle.putString("search", tvSerach.getText().toString());
 				bundle.putSerializable("item", getCopySerializable(selectedItem));
 				bundle.putParcelable("image", item.getBitMam());
+				bundle.putInt("type", Variables.LISTA);
+				
 				Intent intent = new Intent(Items.this,MapActivity.class);
 				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				intent.putExtras(bundle);
@@ -406,7 +407,9 @@ public class Items extends Activity implements IItems, OnMarkerClickListener{
 		is.setLongitude(i.getLongitude());
 		is.setName(i.getName());
 		is.setDescription(i.getDescription());
+		is.setIdSucursal(i.getIdSucursal());
 		return is;
+		
 	}
 
 

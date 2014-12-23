@@ -1,7 +1,13 @@
 package ngesu.and.findit.models;
 
-public class RedSocial {
+import java.io.Serializable;
 
+public class RedSocial implements Serializable {
+
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1222655138654641310L;
 Integer idSucursal;
 String vRedSocial;
 Integer idRedSocial;

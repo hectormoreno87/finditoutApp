@@ -32,7 +32,8 @@ public class GetImages extends AsyncTask<String, Void, Void> {
         
 	}
 	
-	
+	  
+
 	
 
 	@Override
@@ -63,8 +64,12 @@ public class GetImages extends AsyncTask<String, Void, Void> {
             bitmap = BitmapFactory.
                     decodeStream(stream, null, bmOptions);
             //bitmap=Bitmap.createScaledBitmap(bitmap, 50, 50, false);
-            
+            if(stream!=null)
             stream.close();
+        }catch(NullPointerException ex)
+        {
+        	ex.printStackTrace();
+        
         } catch (IOException e1) {
             e1.printStackTrace();
         }

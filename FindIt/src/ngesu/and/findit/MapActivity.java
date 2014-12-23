@@ -1,11 +1,15 @@
 package ngesu.and.findit;
 
 import ngesu.and.findit.models.ItemSerializable;
+import ngesu.and.findit.models.SucursalModel;
+import ngesu.and.findit.utils.Variables;
 
 
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -44,6 +48,7 @@ public class MapActivity extends Activity {
 	  MarkerOptions myMarker;
 	  MarkerOptions itemMarker;
 	  Marker mark; 
+	  
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +57,13 @@ public class MapActivity extends Activity {
         View titleBar = (View) title.getParent();
         titleBar.setBackgroundColor(getResources().getColor(R.color.red));
         
+        try {
+            MapsInitializer.initialize(getApplicationContext());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
 		if (savedInstanceState == null) {
 		//	getFragmentManager().beginTransaction()
 		//			.add(R.id.container, new PlaceholderFragment()).commit();
@@ -59,16 +71,48 @@ public class MapActivity extends Activity {
 		Intent intent=this.getIntent();
 		Bundle bundle=intent.getExtras();
 		
+		Integer type=(Integer)bundle.getInt("type");
+		Bitmap bm=null;
+		LatLng itempos=null;
+		if(type==Variables.LISTA)
+		{
+		
 		ItemSerializable item=(ItemSerializable)bundle.getSerializable("item");
-		Bitmap bm=(Bitmap)bundle.getParcelable("image");
-		LatLng itempos = new LatLng(Double.parseDouble(item.getLatitude()),Double.parseDouble(item.getLongitude()));
+		bm=(Bitmap)bundle.getParcelable("image");
+		itempos= new LatLng(Double.parseDouble(item.getLatitude()),Double.parseDouble(item.getLongitude()));
+		
 		getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);			
 		 map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map_))
 			        .getMap();
 		 
+		 if(bm!=null)
 		 itemMarker= new MarkerOptions().position(itempos)
 	        .title(item.getName()).icon(BitmapDescriptorFactory.fromBitmap(getResizedBitmap(bm,60,60)));
-			    mark = map.addMarker(itemMarker);
+		 else
+		itemMarker= new MarkerOptions().position(itempos)
+		    .title(item.getName());//.icon(BitmapDescriptorFactory.fromBitmap(getResizedBitmap(bm,60,60)));
+		 
+		 
+		 mark = map.addMarker(itemMarker);
+		
+		}
+		else if(type==Variables.SUCURSAL)
+		{
+			SucursalModel sucursal=(SucursalModel)bundle.getSerializable("sucursal");
+			bm=(Bitmap)bundle.getParcelable("image");
+			itempos= new LatLng(Double.parseDouble(sucursal.getvLatitud()),Double.parseDouble(sucursal.getvLongitud()));
+			getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);			
+			 map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map_))
+				        .getMap(); 
+			 itemMarker= new MarkerOptions().position(itempos)
+		        .title(sucursal.getvEmpresa()).icon(BitmapDescriptorFactory.fromBitmap(getResizedBitmap(bm,60,60)));
+				    mark = map.addMarker(itemMarker);
+		}
+	
+			
+		
+		
+		
 			    
 
 			    // Move the camera instantly to hamburg with a zoom of 15.

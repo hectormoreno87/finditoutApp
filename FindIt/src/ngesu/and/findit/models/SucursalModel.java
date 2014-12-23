@@ -1,14 +1,19 @@
 package ngesu.and.findit.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 
 
-public class SucursalModel  {
+public class SucursalModel implements Serializable  {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Integer idSucursal;
 	Integer idEmpresa;
-	String vNombre;
+	String vNombreSuc;
 	String vDirecc;
 	String vLongitud;
 	String vLatitud;
@@ -55,11 +60,11 @@ public class SucursalModel  {
 	public void setIdEmpresa(Integer idEmpresa) {
 		this.idEmpresa = idEmpresa;
 	}
-	public String getvNombre() {
-		return vNombre;
+	public String getvNombreSuc() {
+		return vNombreSuc;
 	}
-	public void setvNombre(String vNombre) {
-		this.vNombre = vNombre;
+	public void setvNombreSuc(String vNombreSuc) {
+		this.vNombreSuc = vNombreSuc;
 	}
 	public String getvDirecc() {
 		return vDirecc;

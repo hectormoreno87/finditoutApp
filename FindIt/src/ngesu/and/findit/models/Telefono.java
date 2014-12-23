@@ -1,7 +1,13 @@
 package ngesu.and.findit.models;
 
-public class Telefono {
+import java.io.Serializable;
+
+public class Telefono implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7873810081300753923L;
 	Integer idSucursal;
 	String vTelefono;
 	Boolean bWhatsApp;

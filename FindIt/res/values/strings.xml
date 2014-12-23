@@ -18,6 +18,12 @@
     <string name="title_activity_main_face">MainFaceActivity</string>
     <string name="get_started">To get started, log in using Facebook</string>
     <string name="settings">Settings</string>
-
-
+    <string name="addcontact">No está en tu lista de contactos. Deseas agregarlo?</string>
+    <string name="no">No</string>
+    <string name="si">Si</string>
+    <string name="urlimages">http://192.168.6.110/finditout/img/FindOut/</string>
+    <string name="call">Llamar al número </string>
+    <string name="product"> Producto</string>
+    <string name="title_activity_info">InfoActivity</string>
+    <string name="informacioncontacto">Información de contacto </string>
 </resources>

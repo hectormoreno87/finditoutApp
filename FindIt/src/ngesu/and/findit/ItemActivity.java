@@ -10,6 +10,7 @@ import ngesu.and.findit.intefaces.IItems;
 import ngesu.and.findit.models.Item;
 import ngesu.and.findit.models.ItemSerializable;
 import ngesu.and.findit.utils.AdapterVerGaleria;
+import ngesu.and.findit.utils.Variables;
 import ngesu.and.findit.ws.GetImages;
 import android.app.Activity;
 import android.app.ActionBar;
@@ -41,18 +42,20 @@ public class ItemActivity extends FragmentActivity implements IItems {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_item);
 		View title = getWindow().findViewById(android.R.id.title);
+		this.setTitle(R.string.product);
         View titleBar = (View) title.getParent();
         titleBar.setBackgroundColor(getResources().getColor(R.color.red));
-        
-        
-		
 		Intent intent=this.getIntent();
 		Bundle bundle=intent.getExtras();
 		item=(ItemSerializable)bundle.getSerializable("item");
-		String[] imgs=item.getAllImages().split("@@");
-		new GetImages(this, item).execute(imgs);
+		if(item.getAllImages()!=null)
+		{
+			String[] imgs=item.getAllImages().split("@@");
+			new GetImages(this, item).execute(imgs);
+		}
 		getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 		fillInfo();
+		
 		
 	}
 
@@ -64,6 +67,51 @@ public class ItemActivity extends FragmentActivity implements IItems {
 			des.setText(item.getDescription());
 			TextView p = (TextView)findViewById(R.id.producto);
 			p.setText(item.getName());
+			TextView distance = (TextView)findViewById(R.id.distancia);
+			distance.setText(item.getDistance()+"");
+			ImageView btnInfo = (ImageView)findViewById(R.id.btnInfo);
+			btnInfo.setOnClickListener( new OnClickListener() {
+				
+				
+				@Override
+				public void onClick(View v) {
+				
+					Bundle bundle = new Bundle();
+					//bundle.putString("search", tvSerach.getText().toString());
+					//bundle.putSerializable("item", this.getCopySerializable(selectedItem));
+					Intent intent = new Intent(ItemActivity.this,InfoActivity.class);
+					//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					bundle.putString("idSucursal", item.getIdSucursal()+"");
+					intent.putExtras(bundle);
+					
+					startActivity(intent);
+					
+				}
+			});
+			
+			ImageView mapImg= (ImageView)findViewById(R.id.mapImage);
+			mapImg.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					
+					
+					Bundle bundle = new Bundle();
+					//bundle.putString("search", tvSerach.getText().toString());
+					bundle.putSerializable("item", item);
+					//bundle.putParcelable("image", logo);
+					bundle.putInt("type", Variables.LISTA);
+					
+					Intent intent = new Intent(ItemActivity.this,MapActivity.class);
+					//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					intent.putExtras(bundle);
+					startActivity(intent);
+					
+					
+				}
+			});
+			
 		}
 	}
 	
@@ -116,27 +164,8 @@ public class ItemActivity extends FragmentActivity implements IItems {
 		boolean first=true;
 		for(Bitmap bm : images)
 		{
-			
 			Fragment_Image f= new Fragment_Image();
-			
-		
-			//ImageView iv= f.getImg();
-			/*iv.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					i.setBackgroundDrawable(iv.getBackground());
-				}
-			});*/
-			//iv.setBackgroundDrawable(new BitmapDrawable(getResources(), bm));
-			/*if(first)
-			{
-				first=false;
-				i.setBackgroundDrawable(new BitmapDrawable(getResources(), bm));
-			}*/
 			items.add(bm);
-			//ln.addView(iv);
 		}
 		AdapterVerGaleria adapter= new AdapterVerGaleria(getSupportFragmentManager(), items);
 		
@@ -147,6 +176,13 @@ public class ItemActivity extends FragmentActivity implements IItems {
 	        ((CirclePageIndicator) mIndicator).setSnap(true);
 	
 		
+	}
+	
+	
+	public  void onBack(View v)
+	{
+		
+		this.finish();
 	}
 
 }

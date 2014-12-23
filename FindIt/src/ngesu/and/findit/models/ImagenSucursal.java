@@ -1,7 +1,13 @@
 package ngesu.and.findit.models;
 
-public class ImagenSucursal {
+import java.io.Serializable;
 
+public class ImagenSucursal implements Serializable {
+
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3684302708542105564L;
 Integer idSucursal;
 String image;
 Integer status;

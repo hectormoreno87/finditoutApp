@@ -15,7 +15,6 @@ public class ItemSerializable implements Serializable {
 	String image;
 	String finditoutName;
 	Double distance;
-	
 	String latitude;
 	String longitude;
 	String logo;

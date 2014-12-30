@@ -81,7 +81,26 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 			
 		}
         WebServiceManager ws= new WebServiceManager((CallbackSucursal)this);
-        String idSucursal= this.getIntent().getExtras().getString("idSucursal");
+        final String idSucursal= this.getIntent().getExtras().getString("idSucursal");
+        
+        TextView txtGoto= (TextView)findViewById(R.id.txtGotoCatalog);
+        txtGoto.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				//bundle.putString("search", tvSerach.getText().toString());
+				//bundle.putSerializable("item", this.getCopySerializable(selectedItem));
+				Intent intent = new Intent(Sucursal.this,CatalogoActivity.class);
+				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				bundle.putString("idSucursal", idSucursal+"");
+				intent.putExtras(bundle);
+				
+				startActivity(intent);
+				
+			}
+		});
+        
         try {
         	
 			ws.execute("GetSucursalByID",idSucursal);
@@ -153,8 +172,9 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 	private void fillSucursal()
 	{
 		
+		int count=0;
 		//se cambia el tamaño de la imagen de whatsapp y telephons ya que están fijos, cambiará su tamaño dependiendo del dispositivo
-		ImageView ivw= (ImageView)findViewById(R.id.ivWhatsApp);
+		/*ImageView ivw= (ImageView)findViewById(R.id.ivWhatsApp);
 		
 		LinearLayout.LayoutParams lpW= new LinearLayout.LayoutParams((int)(Screen.width*.1),(int)(Screen.width*.1));
 		lpW.setMargins(20, 3, 3, 3);
@@ -163,7 +183,7 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 		
 		LinearLayout.LayoutParams lpT= new LinearLayout.LayoutParams((int)(Screen.width*.1),(int)(Screen.width*.1));
 		lpT.setMargins(20, 3, 3, 3);
-		ivT.setLayoutParams(lpT);
+		ivT.setLayoutParams(lpT);*/
 		
 		
 		if(_sucursalModel!=null)
@@ -179,8 +199,8 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 			lpt.setMargins(20, 3, 3, 3);
 			descripcion.setLayoutParams(lpt);
 			descripcion.setText(_sucursalModel.getvDescripcion());
-			LinearLayout whatsApp=(LinearLayout)findViewById(R.id.whatsappContainer);
-			//email
+			//LinearLayout whatsApp=(LinearLayout)findViewById(R.id.whatsappContainer);
+			/*//email
 			TextView txtEmail= (TextView)findViewById(R.id.txtEmail);
 			ImageView imgE= (ImageView)findViewById(R.id.ivEmail);
 			LinearLayout.LayoutParams lpEmail= new  LinearLayout.LayoutParams((int)(Screen.width*.1), (int)(Screen.width*.1));
@@ -199,11 +219,11 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 			txtWeb.setText(_sucursalModel.getvWeb());
 			OnClickOpenBrowser opb= new OnClickOpenBrowser(this,_sucursalModel.getvWeb());
 			txtWeb.setOnClickListener(opb);
-			
+			*/
 			
 			
 			//whatsapp
-			whatsApp.removeAllViews();
+			/*whatsApp.removeAllViews();
 			
 			whatsApp.setGravity(Gravity.CENTER_VERTICAL);
 			int counter=0;
@@ -223,10 +243,10 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 					
 					counter++;
 				}
-			}
+			}*/
 			
 			//Telefonos
-			LinearLayout telephones=(LinearLayout)findViewById(R.id.telephoneContainer);
+			/*LinearLayout telephones=(LinearLayout)findViewById(R.id.telephoneContainer);
 			telephones.setGravity(Gravity.CENTER_VERTICAL);
 			telephones.removeAllViews();
 			
@@ -292,13 +312,13 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 				telephones.addView(tex);
 				counter++;
 			}
+			*/
 			
-			
-			//Redes sociales
+			/*//Redes sociales
 			LinearLayout redessociales=(LinearLayout)findViewById(R.id.idRedesSociales);
 			redessociales.removeAllViews();
 			redessociales.setGravity(Gravity.CENTER_VERTICAL);
-			int count=0;
+			
 			for(RedSocial rs:_sucursalModel.getRedesSociales())
 			{
 				LinearLayout l= new LinearLayout(this);
@@ -356,7 +376,7 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 				
 				//count++;
 				redessociales.addView(l);
-			}
+			}*/
 			
 			
 			
@@ -381,7 +401,7 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 			
 			
 			//onclickOpenMAoActivity
-			ImageView mapImg= (ImageView)findViewById(R.id.ivmap);
+			ImageView mapImg= (ImageView)findViewById(R.id.mapImage);
 			mapImg.setOnClickListener(new OnClickListener() {
 				
 				@Override
@@ -403,7 +423,48 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 					
 				}
 			});
+			ImageView btnInfo = (ImageView)findViewById(R.id.btnInfo);
+			btnInfo.setOnClickListener( new OnClickListener() {
+				
+				
+				@Override
+				public void onClick(View v) {
+				
+					Bundle bundle = new Bundle();
+					//bundle.putString("search", tvSerach.getText().toString());
+					//bundle.putSerializable("item", this.getCopySerializable(selectedItem));
+					Intent intent = new Intent(Sucursal.this,InfoActivity.class);
+					//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					bundle.putString("idSucursal", _sucursalModel.getIdSucursal()+"");
+					intent.putExtras(bundle);
+					
+					startActivity(intent);
+					
+				}
+			});
 			
+			/*ImageView mapImg= (ImageView)findViewById(R.id.mapImage);
+			mapImg.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					
+					
+					Bundle bundle = new Bundle();
+					//bundle.putString("search", tvSerach.getText().toString());
+					bundle.putSerializable("item", item);
+					//bundle.putParcelable("image", logo);
+					bundle.putInt("type", Variables.LISTA);
+					
+					Intent intent = new Intent(Sucursal.this,MapActivity.class);
+					//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					intent.putExtras(bundle);
+					startActivity(intent);
+					
+					
+				}
+			});*/
 			
 			
 			
@@ -664,5 +725,27 @@ public class Sucursal extends FragmentActivity implements CallbackSucursal, IIte
 			 }
 			}
 	
+	public  void onBack(View v)
+	{
+		
+		this.finish();
+	}
+	
+	public  void goToCatalog(View v)
+	{
+		
+		Bundle bundle = new Bundle();
+		//bundle.putString("search", tvSerach.getText().toString());
+		//bundle.putSerializable("item", this.getCopySerializable(selectedItem));
+		Intent intent = new Intent(Sucursal.this,CatalogoActivity.class);
+		//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		bundle.putString("idSucursal", _sucursalModel.getIdSucursal()+"");
+		intent.putExtras(bundle);
+		
+		startActivity(intent);
+	}
 
+	
+	
+	
 }

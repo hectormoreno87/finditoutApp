@@ -50,7 +50,7 @@
         </activity>
         <activity
             android:name="ngesu.and.findit.MapActivity"
-            android:label="@string/title_activity_items"
+            android:label="@string/title_activity_map"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
 
@@ -95,7 +95,12 @@
         <activity
             android:name="ngesu.and.findit.InfoActivity"
             android:label="@string/title_activity_info"
-             android:theme="@android:style/Theme.Dialog"  >
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name="ngesu.and.findit.CatalogoActivity"
+            android:label="@string/title_activity_catalogo"
+            android:theme="@android:style/Theme.Dialog" >
         </activity>
     </application>
 

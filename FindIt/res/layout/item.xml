@@ -8,21 +8,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_gravity="center_vertical|center_horizontal"
         android:layout_weight=".9"
+        android:gravity="center_vertical|center_horizontal"
         android:weightSum="1" >
 
         <LinearLayout
             android:id="@+id/LinearLayout1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight=".3"
-            android:gravity="center_vertical|center_horizontal"
+            android:layout_weight=".35"
+            android:gravity="top|center_horizontal"
             android:orientation="vertical"
             android:weightSum="1" >
 
             <ImageView
                 android:id="@+id/imgItem"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight=".8"
                 android:background="@drawable/loading" />
@@ -32,7 +34,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight=".7"
+            android:layout_weight=".65"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:weightSum="1" >
@@ -42,13 +44,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight=".3"
-                android:gravity="center_vertical" >
+                android:gravity="top" >
 
                 <ImageView
-                    android:id="@+id/currentImage"
+                    android:id="@+id/logo"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_launcher" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/finditoutname"

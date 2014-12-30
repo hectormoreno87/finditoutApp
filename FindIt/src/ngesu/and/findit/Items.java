@@ -17,13 +17,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import ngesu.and.findit.MainActivity.PlaceholderFragment;
+import ngesu.and.findit.intefaces.IFillProduct;
+import ngesu.and.findit.intefaces.IGetLogo;
+import ngesu.and.findit.intefaces.IGetLogoView;
 import ngesu.and.findit.intefaces.IItems;
 import ngesu.and.findit.models.Item;
 import ngesu.and.findit.models.ItemSerializable;
 import ngesu.and.findit.utils.ResizeAnimation;
 import ngesu.and.findit.utils.Screen;
 import ngesu.and.findit.utils.Variables;
+import ngesu.and.findit.ws.FillProduct;
 import ngesu.and.findit.ws.GetImage;
+import ngesu.and.findit.ws.GetLogo;
 import ngesu.and.findit.ws.WebServiceManager;
 import android.app.Activity;
 import android.app.Fragment;
@@ -36,6 +41,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,7 +55,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 
-public class Items extends Activity implements IItems, OnMarkerClickListener{
+public class Items extends Activity implements IItems, OnMarkerClickListener, IFillProduct, IGetLogo{
 
 	LinearLayout items;
 	public final int offset=1000;
@@ -71,8 +77,8 @@ public class Items extends Activity implements IItems, OnMarkerClickListener{
 		setContentView(R.layout.activity_items);
 		
 		hash= new Hashtable<Integer,View>();
-			items=(LinearLayout)this.findViewById(R.id.idLayoutList);
-			items.removeAllViews();
+		items=(LinearLayout)this.findViewById(R.id.idLayoutList);
+		items.removeAllViews();
 		if (savedInstanceState == null) {
 //			getFragmentManager().beginTransaction()
 //					.add(R.id.container, new PlaceholderFragment()).commit();
@@ -89,8 +95,6 @@ public class Items extends Activity implements IItems, OnMarkerClickListener{
 			//String jSonResult="";
 			try {
 				ws.execute("GetInfo",search,"","","GetInfo",distance);
-				
-				
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -139,34 +143,18 @@ public class Items extends Activity implements IItems, OnMarkerClickListener{
 	public void callback(List<Item> items_) {
 		// TODO Auto-generated method stub
 		for (Item i : items_) {
-			try
-			{
+			FillProduct fp=new FillProduct(this,i);
+			fp.execute();
 			
-				
-			LinearLayout itemLayout=(LinearLayout)LayoutInflater.from(this).inflate(R.layout.item, null);
-			itemLayout.setId(offset+(++count));
-			LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams((int)(Screen.width),(int)(Screen.height*.2));
-			//lp.setMargins((int)(Screen.width*.02), (int)(Screen.height*.03), (int)(Screen.width*.02),0);
-			itemLayout.setLayoutParams(lp);
-			fillItem(itemLayout,i);
-			items.addView(itemLayout);
-			items.setGravity(Gravity.CENTER_HORIZONTAL);
-			LinearLayout lm=new LinearLayout(this);
-			lm.setLayoutParams(new LinearLayout.LayoutParams(0,0));
-			//LinearLayout mapLayout=(LinearLayout)LayoutInflater.from(this).inflate(R.layout.mapview, null);
-			hash.put(itemLayout.getId(), lm);
-			items.addView(lm);
-			}catch(Exception ex)
-			{
-				ex.printStackTrace();
-			}
-		}		
+		}	
+		Log.d("finjhgjhgjhgjgjhghjghgkjgjgkj","terminoghjgjgkhgjhgjhgjhgjgjkgjgj ");
+		
 		
 	}
 
 	
 	
-	public void fillItem(final LinearLayout itemLayout,final Item item)
+	/*public void fillItem(final LinearLayout itemLayout,final Item item)
 	{
 		
 		TextView txtfio=(TextView)itemLayout.findViewById(R.id.finditoutname);
@@ -200,102 +188,12 @@ public class Items extends Activity implements IItems, OnMarkerClickListener{
 				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				intent.putExtras(bundle);
 				startActivity(intent);
-				// TODO Auto-generated method stub
-				/*
-				if(currentMapID!=0)
-				{
-					
-					LinearLayout mapL0=(LinearLayout)hash.get(currentMapID);
-					
-					ResizeAnimation resizeAnimation = new ResizeAnimation(mapL0, 0,0);
-					resizeAnimation.setDuration(600);
-					mapL0.startAnimation(resizeAnimation);
-					
-					//mapL0.setLayoutParams(new LinearLayout.LayoutParams(0,0));
-					mapL0.removeAllViews();
-				}
 				
-				LinearLayout mapL=(LinearLayout)hash.get(itemLayout.getId());
-				currentMapID=itemLayout.getId();
-				
-				ResizeAnimation resizeAnimation = new ResizeAnimation(mapL, (int)(Screen.width),(int)(Screen.height*.6));
-				resizeAnimation.setDuration(600);
-				mapL.startAnimation(resizeAnimation);
-				//ScrollView sv=(ScrollView)findViewById(R.id.scrollView1);
-				//sv.setOverScrollMode(ScrollView.OVER_SCROLL_NEVER);
-				//LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams((int)(Screen.width),(int)(Screen.height*.6));
-				//mapL.setLayoutParams(lp);
-				
-				mapL.addView(lnMap);
-				
-				final LatLng itemPos = new LatLng(Double.parseDouble(item.getLatitude()),Double.parseDouble( item.getLongitude()));
-				LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE); 
-				 //final LatLng actualPos = new LatLng(21.6827248, -103.3466798);
-			
-				final LocationListener locationListener = new LocationListener() {
-					
-				    public void onLocationChanged(Location location) {
-				        longitude = location.getLongitude();
-				        latitude = location.getLatitude();
-				        
-				        myMarker= new MarkerOptions()
-				        .position(new LatLng(latitude, longitude))
-				        .title("Me")
-				        .snippet("Me is cool")
-				        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher));
-				        updateMap();
-				        
-				        
-				       
-				        
-				    }
-
-					@Override
-					public void onStatusChanged(String provider, int status,
-							Bundle extras) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void onProviderEnabled(String provider) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void onProviderDisabled(String provider) {
-						// TODO Auto-generated method stub
-						
-					}
-				};
-				lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000l, 10f, locationListener);
-				//Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				map = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapID))
-				        .getMap();
-				map.setOnMarkerClickListener(Items.this);
-				  
-				    itemMArker = new MarkerOptions().position(itemPos)
-				        .title(item.getName())
-				        .flat(true)
-				        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher));
-				   if(item.getBitMam()!=null)
-				   {
-					  itemMArker.icon(BitmapDescriptorFactory.fromBitmap(getResizedBitmap(item.getBitMam(),60,60))); 
-				   }
-					   updateMap();
-
-				    // Move the camera instantly to hamburg with a zoom of 15.
-				    map.moveCamera(CameraUpdateFactory.newLatLngZoom(itemPos, 5));
-
-				    // Zoom in, animating the camera.
-				    map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
-			*/	
 			}
 		});
 		
 	}
-	
+	*/
 	
 	public void  updateMap()
 	{
@@ -344,47 +242,11 @@ public class Items extends Activity implements IItems, OnMarkerClickListener{
 	public void callbackImage(final Item item, LinearLayout itemLayout, Bitmap image) {
 		// TODO Auto-generated method stub
 		
-		LinearLayout ly=(LinearLayout)itemLayout.findViewById(R.id.idCompania);
-		ly.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				Bundle bundle = new Bundle();
-				//bundle.putString("search", tvSerach.getText().toString());
-				//bundle.putSerializable("item", this.getCopySerializable(selectedItem));
-				Intent intent = new Intent(Items.this,Sucursal.class);
-				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				bundle.putString("idSucursal", item.getIdSucursal()+"");
-				intent.putExtras(bundle);
-				
-				startActivity(intent);
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		ImageView imageView = (ImageView)itemLayout.findViewById(R.id.imgItem);
-		imageView.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Bundle bundle = new Bundle();
-				//bundle.putString("search", tvSerach.getText().toString());
-				//bundle.putString("distance", distance.getText().toString().replace(" m","").replace(" k","000").replace("m",""));
-				Intent intent = new Intent(Items.this,ItemActivity.class);
-				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				bundle.putSerializable("item",getCopySerializable(item));
-				
-				intent.putExtras(bundle);
-				
-				startActivity(intent);
-
-			}
-		});
+		
    	    BitmapDrawable ob = new BitmapDrawable(image);
+   	    ImageView imageView = (ImageView)itemLayout.findViewById(R.id.imgItem);
 		imageView.setBackgroundDrawable(ob);
-		item.setBitMam(image);
+		//item.setBitMam(image);
 		
 	}
 
@@ -438,5 +300,114 @@ public class Items extends Activity implements IItems, OnMarkerClickListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+
+
+	@Override
+	public void callback(View v, final Item item) {
+		// TODO Auto-generated method stub
+		items.addView(v);
+		items.setGravity(Gravity.CENTER_HORIZONTAL);
+		LinearLayout lm=new LinearLayout(this);
+		lm.setLayoutParams(new LinearLayout.LayoutParams(0,0));
+		//LinearLayout mapLayout=(LinearLayout)LayoutInflater.from(this).inflate(R.layout.mapview, null);
+		//hash.put(v.getId(), lm);
+		items.addView(lm);
+		LinearLayout ly=(LinearLayout)v.findViewById(R.id.idCompania);
+		ly.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Bundle bundle = new Bundle();
+				//bundle.putString("search", tvSerach.getText().toString());
+				//bundle.putSerializable("item", this.getCopySerializable(selectedItem));
+				Intent intent = new Intent(Items.this,Sucursal.class);
+				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				bundle.putString("idSucursal", item.getIdSucursal()+"");
+				intent.putExtras(bundle);
+				
+				startActivity(intent);
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		ImageView imageView = (ImageView)v.findViewById(R.id.imgItem);
+		imageView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Bundle bundle = new Bundle();
+				//bundle.putString("search", tvSerach.getText().toString());
+				//bundle.putString("distance", distance.getText().toString().replace(" m","").replace(" k","000").replace("m",""));
+				Intent intent = new Intent(Items.this,ItemActivity.class);
+				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				//bundle.putSerializable("item",getCopySerializable(item));
+				bundle.putString("idProducto",item.getIdItem()+"");
+				
+				intent.putExtras(bundle);
+				
+				startActivity(intent);
+
+			}
+		});
+		
+final ImageView img=(ImageView)v.findViewById(R.id.goToMap);
+		
+		img.setOnClickListener(new OnClickListener() {	
+			@Override
+			public void onClick(View v) {
+				//selectedItem=item;
+				Bundle bundle = new Bundle();
+				//bundle.putString("search", tvSerach.getText().toString());
+				bundle.putSerializable("item", item);
+				//bundle.putParcelable("image", item.getBitMam());
+				bundle.putInt("type", Variables.LISTA);
+				
+				Intent intent = new Intent((Items.this),MapActivity.class);
+				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.putExtras(bundle);
+				startActivity(intent);
+				
+			}
+		});
+		
+		GetImage getImagews=new GetImage(this,(LinearLayout)v,item);
+		getImagews.execute(item.getImage());
+		
+		ImageView imgv=(ImageView)v.findViewById(R.id.logo);
+		new GetLogo(this,imgv).execute(item.getLogo());
+	}
+
+
+
+
+	
+
+
+
+
+	@Override
+	public void callbackImage(Bitmap image) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void callbackImage(Bitmap image, ImageView v) {
+		// TODO Auto-generated method stub
+		 BitmapDrawable ob = new BitmapDrawable(image);
+	   	    //ImageView imageView = (ImageView)itemLayout.findViewById(R.id.imgItem);
+			v.setBackgroundDrawable(ob);
+			//item.setBitMam(image);
+	}
+
+
+
+
+
+	
 
 }

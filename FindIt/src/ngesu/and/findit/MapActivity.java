@@ -1,5 +1,6 @@
 package ngesu.and.findit;
 
+import ngesu.and.findit.models.Empresa;
 import ngesu.and.findit.models.ItemSerializable;
 import ngesu.and.findit.models.SucursalModel;
 import ngesu.and.findit.utils.Variables;
@@ -78,20 +79,16 @@ public class MapActivity extends Activity {
 		{
 		
 		ItemSerializable item=(ItemSerializable)bundle.getSerializable("item");
-		bm=(Bitmap)bundle.getParcelable("image");
+		//bm=(Bitmap)bundle.getParcelable("image");
 		itempos= new LatLng(Double.parseDouble(item.getLatitude()),Double.parseDouble(item.getLongitude()));
 		
 		getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);			
 		 map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map_))
 			        .getMap();
 		 
-		 if(bm!=null)
-		 itemMarker= new MarkerOptions().position(itempos)
-	        .title(item.getName()).icon(BitmapDescriptorFactory.fromBitmap(getResizedBitmap(bm,60,60)));
-		 else
-		itemMarker= new MarkerOptions().position(itempos)
-		    .title(item.getName());//.icon(BitmapDescriptorFactory.fromBitmap(getResizedBitmap(bm,60,60)));
 		 
+		 itemMarker= new MarkerOptions().position(itempos)
+	        .title(item.getName());//.icon(BitmapDescriptorFactory.fromBitmap(getResizedBitmap(bm,60,60)));
 		 
 		 mark = map.addMarker(itemMarker);
 		
@@ -108,12 +105,18 @@ public class MapActivity extends Activity {
 		        .title(sucursal.getvEmpresa()).icon(BitmapDescriptorFactory.fromBitmap(getResizedBitmap(bm,60,60)));
 				    mark = map.addMarker(itemMarker);
 		}
-	
-			
-		
-		
-		
-			    
+		else if(type==Variables.Catalogo)
+		{
+			Empresa empresa=(Empresa)bundle.getSerializable("empresa");
+			//bm=(Bitmap)bundle.getParcelable("image");
+			itempos= new LatLng(Double.parseDouble(empresa.getSucursal().getvLatitud()),Double.parseDouble(empresa.getSucursal().getvLongitud()));
+			getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);			
+			 map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map_))
+				        .getMap(); 
+			 itemMarker= new MarkerOptions().position(itempos)
+		        .title(empresa.getvEmpresa());//.icon(BitmapDescriptorFactory.fromBitmap(getResizedBitmap(bm,60,60)));
+				    mark = map.addMarker(itemMarker);
+		} 
 
 			    // Move the camera instantly to hamburg with a zoom of 15.
 			    map.moveCamera(CameraUpdateFactory.newLatLngZoom(itempos, 15));
@@ -123,7 +126,7 @@ public class MapActivity extends Activity {
 			    
 			    LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 			    
-final LocationListener locationListener = new LocationListener() {
+                final LocationListener locationListener = new LocationListener() {
 					
 				    public void onLocationChanged(Location location) {
 				        longitude = location.getLongitude();

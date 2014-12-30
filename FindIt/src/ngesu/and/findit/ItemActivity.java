@@ -6,12 +6,14 @@ import java.util.List;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
+import ngesu.and.findit.intefaces.IGetProducto;
 import ngesu.and.findit.intefaces.IItems;
 import ngesu.and.findit.models.Item;
 import ngesu.and.findit.models.ItemSerializable;
 import ngesu.and.findit.utils.AdapterVerGaleria;
 import ngesu.and.findit.utils.Variables;
 import ngesu.and.findit.ws.GetImages;
+import ngesu.and.findit.ws.GetProducto;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -34,7 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.os.Build;
 
-public class ItemActivity extends FragmentActivity implements IItems {
+public class ItemActivity extends FragmentActivity implements IGetProducto, IItems {
 
 	ItemSerializable item;
 	@Override
@@ -47,14 +49,9 @@ public class ItemActivity extends FragmentActivity implements IItems {
         titleBar.setBackgroundColor(getResources().getColor(R.color.red));
 		Intent intent=this.getIntent();
 		Bundle bundle=intent.getExtras();
-		item=(ItemSerializable)bundle.getSerializable("item");
-		if(item.getAllImages()!=null)
-		{
-			String[] imgs=item.getAllImages().split("@@");
-			new GetImages(this, item).execute(imgs);
-		}
-		getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-		fillInfo();
+		String idProducto =bundle.getString("idProducto");
+		new GetProducto(this, idProducto).execute(new String());
+		
 		
 		
 	}
@@ -69,6 +66,8 @@ public class ItemActivity extends FragmentActivity implements IItems {
 			p.setText(item.getName());
 			TextView distance = (TextView)findViewById(R.id.distancia);
 			distance.setText(item.getDistance()+"");
+			distance.setText("$"+item.getCost()+"");
+			
 			ImageView btnInfo = (ImageView)findViewById(R.id.btnInfo);
 			btnInfo.setOnClickListener( new OnClickListener() {
 				
@@ -139,18 +138,6 @@ public class ItemActivity extends FragmentActivity implements IItems {
 	
 
 	@Override
-	public void callback(List<Item> items) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void callbackImage(Item items, LinearLayout itemLayout, Bitmap image) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void callbackImages(List<Bitmap> images) {
 		// TODO Auto-generated method stub
 		
@@ -161,7 +148,7 @@ public class ItemActivity extends FragmentActivity implements IItems {
 		//final ImageView i= (ImageView)findViewById(R.id.currentImage);
 		//i.setBackgroundDrawable(null);
 		//ln.removeAllViews();
-		boolean first=true;
+	
 		for(Bitmap bm : images)
 		{
 			Fragment_Image f= new Fragment_Image();
@@ -183,6 +170,31 @@ public class ItemActivity extends FragmentActivity implements IItems {
 	{
 		
 		this.finish();
+	}
+
+	@Override
+	public void callback(List<Item> items) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void callbackImage(Item items, LinearLayout itemLayout, Bitmap image) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void callbackProducto(ItemSerializable p) {
+		// TODO Auto-generated method stub
+		item=p;
+		if(item.getAllImages()!=null)
+		{
+			String[] imgs=item.getAllImages().split("@@");
+			new GetImages(this, item).execute(imgs);
+		}
+		getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		fillInfo();
 	}
 
 }

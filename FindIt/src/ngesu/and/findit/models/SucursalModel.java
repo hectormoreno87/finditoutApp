@@ -47,6 +47,7 @@ public class SucursalModel implements Serializable  {
 	}
 	public void setIdSucursal(Integer idSucursal) {
 		this.idSucursal = idSucursal;
+	
 	}
 	public List<ImagenSucursal> getImagenes() {
 		return imagenes;

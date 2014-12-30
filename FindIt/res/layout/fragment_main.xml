@@ -13,7 +13,7 @@
     tools:context="ngesu.and.findit.MainActivity$PlaceholderFragment" >
 
     <LinearLayout
-        android:id="@+id/LinearLayout2"
+        android:id="@+id/lnItemCatalog"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_vertical"
@@ -23,7 +23,7 @@
         android:weightSum="1" >
 
         <LinearLayout
-            android:id="@+id/LinearLayout2"
+            android:id="@+id/lnItemCatalog"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight=".4"

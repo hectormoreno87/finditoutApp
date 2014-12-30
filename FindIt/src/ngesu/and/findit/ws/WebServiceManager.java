@@ -5,11 +5,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import ngesu.and.findit.CatalogoActivity;
 import ngesu.and.findit.InfoActivity;
 import ngesu.and.findit.Items;
 import ngesu.and.findit.Sucursal;
 import ngesu.and.findit.intefaces.CallbackSucursal;
+import ngesu.and.findit.intefaces.ICatalogo;
 import ngesu.and.findit.intefaces.IItems;
+import ngesu.and.findit.models.Empresa;
 import ngesu.and.findit.models.Item;
 import ngesu.and.findit.models.SucursalModel;
 
@@ -39,12 +42,15 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 	private static final String NAMESPACE = "http://tempuri.org/";
 	//private static final String URL = "http://192.168.1.27/injertos2/AndroidSync.asmx";
 	private SoapSerializationEnvelope envelope;
-	private static final String URL = "http://192.168.6.110/finditout/wsFindItOut.asmx";
+	private static final String URL = "http://192.168.1.110/finditout/wsFindItOut.asmx";
 	IItems itemsInterface;
 	CallbackSucursal sucursal;
 	List<Item> items;
 	SucursalModel _sucursalModel;
 	String type;
+	ICatalogo catalogolInterface;
+	Empresa empresa;
+	
 	public WebServiceManager(IItems itemsInterface)
 	{
 		try
@@ -77,6 +83,25 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 		}
 	}
 	
+	
+	public WebServiceManager(ICatalogo catalogolInterface)
+	{
+		try
+		{	
+			type="GetEmpresa";
+			items= new ArrayList<Item>();
+			this.catalogolInterface=catalogolInterface;
+			envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+
+	
 	public WebServiceManager(CallbackSucursal sucursalInterface, Boolean fromInfo)
 	{
 		try
@@ -92,7 +117,6 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 			ex.printStackTrace();
 		}
 	}
-	
 	
 	private String callWebServiceGetItems(String search, String latitude, String longitude, String methodName, String distance) throws IOException, XmlPullParserException
 	{
@@ -119,6 +143,27 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 	
 	
 	private String callWebServiceGetSucursal(String method, String idSucursal) throws IOException, XmlPullParserException
+	{
+		String res="";
+	
+		try
+		{
+			String SOAP_ACTION = NAMESPACE+method;
+			SoapObject request = new SoapObject(NAMESPACE, method);
+			request.addProperty("idSucursal", idSucursal);
+			
+			envelope.setOutputSoapObject(request);
+			HttpTransportSE transporte = new HttpTransportSE(URL);
+			transporte.call(SOAP_ACTION, envelope);
+			SoapPrimitive resultado_xml =(SoapPrimitive)envelope.getResponse();
+			res = resultado_xml.toString();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return res;
+	}
+	
+	private String callWebServiceGetEmpresa(String method, String idSucursal) throws IOException, XmlPullParserException
 	{
 		String res="";
 	
@@ -176,6 +221,19 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 				}
 				
 			}
+			else if(params[0]=="getInfoBySucursal")
+			{
+				sResult=callWebServiceGetEmpresa(params[0],params[1]);
+			    JSONArray array = new JSONArray(sResult);
+			    Gson gson = new Gson();
+			    
+			    for (int i = 0; i < array.length(); i++) {
+					JSONObject obj = array.getJSONObject(i);
+					empresa=gson.fromJson(obj.toString(), Empresa.class);
+					
+				}
+				
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -211,7 +269,11 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 			
 			pd = new ProgressDialog((InfoActivity)(WebServiceManager.this.sucursal));
 		}
-    	
+		else if(type.compareTo("GetEmpresa")==0)
+		{
+			
+			pd = new ProgressDialog((CatalogoActivity)(WebServiceManager.this.catalogolInterface));
+		}
     	
         pd.setTitle("Sincronizando...");
         pd.setMessage("Por Favor Espere.");
@@ -248,6 +310,11 @@ public class WebServiceManager extends AsyncTask<String, Integer, String> {
 		{
 			
 			sucursal.callback(_sucursalModel);
+		}
+		else if(type.compareTo("GetEmpresa")==0)
+		{
+			
+			catalogolInterface.callback(empresa);
 		}
 		
 		
